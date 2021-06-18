@@ -1,0 +1,184 @@
+openapi: 3.0.0
+info:
+  title: "SM_iDa_014"
+  description: "Here is OPENAPI3 specification yaml format for SM_iDa_014 service with field confines, data masks  and possible length"
+  version: "1.3.43"
+servers:
+  - url: "https://api.vtbbank.ru/statement/"
+paths:
+  /transactions:
+    get:
+      operationId: getStatementTransactions
+      description: "Выписка транзакций по текущей дате"
+      parameters:
+        - name: accountNumber
+          in: query
+          required: true
+          schema:
+            type: string
+            maxLength: 20
+        - name: statementDate
+          in: query
+          description: "statement date"
+          schema:
+            type: string
+            format: date-time
+          required: true
+        - name: curFormat
+          in: query
+          description: "3 letter currency code as defined by ISO-4217"
+          required: false
+          schema:
+            type: string
+            format: iso-4217
+            example: EUR
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/transactions"
+
+components:
+  schemas:
+    transactions:
+      type: object
+      properties:
+        transactions:
+          type: array
+          items:
+            $ref: "#/components/schemas/transaction"
+    amount:
+      type: object
+      properties:
+        amount:
+          type: number
+          example: 1.01
+        currencyName:
+          type: string
+          format: iso-4217
+          example: EUR
+      required:
+        - amount
+        - currencyName
+
+    swiftTransfer:
+      type: object
+      properties:
+        bankOperationCode:
+          type: string
+          format: MT 103
+        beneficiaryBankAccount:
+          type: string
+          maxLength: 20
+        beneficiaryBankName:
+          type: string
+        beneficiaryBankOption:
+          type: string
+        beneficiaryCustomerAccount:
+          type: string
+        beneficiaryCustomerName:
+          type: string
+        detailsOfCharges:
+          type: string
+        exchangeRate:
+          type: string
+        instructedAmount:
+          type: string
+        instructionCode:
+          type: string
+        intermediaryBankAccount:
+          type: string
+          maxLength: 20
+        intermediaryBankName:
+          type: string
+        intermediaryBankOption:
+          type: string
+        messageDestinator:
+          type: string
+        messageIdentifier:
+          type: string
+        messageOriginator:
+          type: string
+        messageReceiveTime:
+          type: string
+          format: date-time
+        messageSendTime:
+          type: string
+          format: date-time
+        messageType:
+          type: string
+        orderingCustomerAccount:
+          type: string
+        orderingCustomerName:
+          type: string
+        orderingCustomerOption:
+          type: string
+        orderingInstitutionAccount:
+          type: string
+          maxLength: 20
+          format: password
+        orderingInstitutionName:
+          type: string
+        orderingInstitutionOption:
+          type: string
+        receiverCharges:
+          type: string
+        receiverCorrespondentAccount:
+          type: string
+          maxLength: 20
+          format: password
+        receiverCorrespondentName:
+          type: string
+        receiverCorrespondentOption:
+          type: string
+        regulatoryReporting:
+          type: string
+        remittanceInformation:
+          type: string
+        senderCharges:
+          type: string
+        senderCorrespondentAccount:
+          type: string
+          maxLength: 20
+        senderCorrespondentName:
+          type: string
+        senderCorrespondentOption:
+          type: string
+        senderToReceiverInformation:
+          type: string
+        transactionReferenceNumber:
+          type: string
+        transactionRelatedReference:
+          type: string
+        transactionTypeCode:
+          type: string
+        urgent:
+          type: string
+        valueDataCurrencyInterbankSettledAmount:
+          type: string
+      required:
+        - bankOperationCode
+    transaction:
+      type: object
+      properties:
+        amount:
+          $ref: "#/components/schemas/amount"
+        correspondingAccount:
+          maxLength: 20
+          type: string
+          example: "30101810400000000225"
+        swiftTransfer:
+          $ref: "#/components/schemas/swiftTransfer"
+        uuid:
+          type: string
+          format: uuid
+        transactionId:
+          type: integer
+          example: 6540997758406
+      required:
+        - amount
+        - swiftTransfer
+        - uuid
+        - transactionId
