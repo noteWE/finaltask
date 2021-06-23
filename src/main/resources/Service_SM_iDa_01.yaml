@@ -160,6 +160,7 @@ components:
           type: string
       required:
         - bankOperationCode
+
     transaction:
       type: object
       properties:
